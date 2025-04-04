@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id Int @id @default(autoincrement())
+
+    telegramId   String   @unique
+    firstName    String
+    lastName     String?
+    username     String?  @unique
+    languageCode String   @default("en")
+    isPremium    Boolean  @default(false)
+    createdAt    DateTime @default(now())
+
+    inviterId        String?
+    balance          Decimal @default(0.0)
+    walletAddress    String  @default("")
+    msgId            Int?
+    action           String  @default("")
+    withdrawalStatus String  @default("idle")
+
+    transactions Transaction[]
+}
+
+model Transaction {
+    id String @id @default(uuid())
+
+    amount Decimal
+    status String // e.g., "pending", "completed", "failed"
+    date   DateTime @default(now())
+    type   String   @default("withdrawal") // "withdrawal", "deposit"
+
+    userId String
+    user   User   @relation(fields: [userId], references: [telegramId], onDelete: Cascade)
+}
+
+model Process {
+    id String @id @default(uuid())
+
+    channel_id String
+    user_id    String
+    message_id Int?
+    createdAt  DateTime @default(now())
+
+    @@index([channel_id, user_id])
+}
