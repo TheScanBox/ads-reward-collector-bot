@@ -358,6 +358,9 @@ bot.on("callback_query", async (ctx) => {
                         [{ text: "🔙 Back", callback_data: "back" }],
                     ],
                 },
+                link_preview_options: {
+                    is_disabled: true,
+                },
                 parse_mode: "HTML",
             }
         );
