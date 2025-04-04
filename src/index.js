@@ -25,6 +25,12 @@ const bot = new Telegraf(BOT_TOKEN);
 const app = express();
 
 app.use(express.json());
+app.use(
+    await bot.createWebhook({
+        domain: process.env.webhookDomain,
+        drop_pending_updates: true,
+    })
+);
 
 const checkAuth = (req, res, next) => {
     const authHeader = req.headers["authorization"];
@@ -688,9 +694,9 @@ bot.on(message("chat_shared"), async (ctx) => {
     });
 });
 
-bot.launch(() => {
-    console.log("BOT STARTED");
-});
+// bot.launch(() => {
+//     console.log("BOT STARTED");
+// });
 
 app.listen(PORT, () => {
     console.log(`Listening to port: ${PORT}`);
