@@ -155,7 +155,7 @@ app.get("/delete", checkAuth, async (req, res) => {
     }
 });
 
-app.get("/clear", async (req, res) => {
+app.get("/clear", checkAuth, async (req, res) => {
     const twoHoursAgo = new Date();
     twoHoursAgo.setHours(twoHoursAgo.getHours() - parseInt(INTERVAL));
 
