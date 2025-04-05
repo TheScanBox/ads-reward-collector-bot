@@ -238,20 +238,18 @@ bot.start(async (ctx) => {
 });
 
 bot.on(message("text"), async (ctx) => {
-    const text = ctx.message.text;
+    const user_text = ctx.message.text;
     const user_id = ctx.from.id.toString();
 
-    const { action } = await getUser(user_id, ctx);
+    const { action, msgId, languageCode } = await getUser(user_id, ctx);
 
     if (action == "change_wallet") {
-        const { msgId, languageCode } = await getUser(user_id, ctx);
-
         if (msgId) {
             await ctx.deleteMessage(msgId);
         }
         await ctx.deleteMessage();
 
-        if (!isValidAddress(text)) {
+        if (!isValidAddress(user_text)) {
             await ctx.reply(text[languageCode].INVALID);
             await prisma.user.update({
                 where: {
@@ -270,7 +268,7 @@ bot.on(message("text"), async (ctx) => {
                 telegramId: user_id,
             },
             data: {
-                walletAddress: text,
+                walletAddress: user_text,
                 msgId: null,
                 action: "",
             },
