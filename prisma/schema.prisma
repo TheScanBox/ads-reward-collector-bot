@@ -50,10 +50,8 @@ model Transaction {
 model Process {
     id String @id @default(uuid())
 
-    channel_id String
+    channel_id String   @unique
     user_id    String
     message_id Int?
     createdAt  DateTime @default(now())
-
-    @@index([channel_id, user_id])
 }

@@ -11,6 +11,7 @@ import { transfertTON } from "./utils/sendTON.js";
 import { generateID } from "./utils/generateID.js";
 import { isValidAddress } from "./utils/isValidAddress.js";
 import { calculateReward } from "./utils/calculateRewards.js";
+import { clearProcess } from "./utils/clearProcesses.js";
 
 dotenv.config();
 
@@ -25,12 +26,12 @@ const bot = new Telegraf(BOT_TOKEN);
 const app = express();
 
 app.use(express.json());
-app.use(
-    await bot.createWebhook({
-        domain: process.env.webhookDomain,
-        drop_pending_updates: true,
-    })
-);
+// app.use(
+//     await bot.createWebhook({
+//         domain: process.env.webhookDomain,
+//         drop_pending_updates: true,
+//     })
+// );
 
 const checkAuth = (req, res, next) => {
     const authHeader = req.headers["authorization"];
@@ -203,14 +204,7 @@ app.get("/clear", checkAuth, async (req, res) => {
                     process.user_id,
                     process.message_id,
                     undefined,
-                    "❌ Process was canceled...",
-                    {
-                        reply_markup: {
-                            inline_keyboard: [
-                                [{ text: "🔙 Back", callback_data: "back" }],
-                            ],
-                        },
-                    }
+                    "❌ Process was canceled..."
                 );
             } catch (error) {
                 console.error(error);
@@ -222,6 +216,29 @@ app.get("/clear", checkAuth, async (req, res) => {
         console.log(error);
 
         res.status(503).json({ error: error });
+    }
+});
+
+app.get("/process", checkAuth, async (req, res) => {
+    const { channel_id } = req.query;
+
+    try {
+        const process = await prisma.process.findFirst({
+            where: {
+                channel_id: channel_id,
+            },
+            select: {
+                user_id: true,
+            },
+        });
+
+        if (!process) return res.json({ status: "failed" });
+
+        return res.json({ owner_id: process?.user_id, status: "ok" });
+    } catch (error) {
+        console.log(error);
+
+        res.status(503).json({ error: error, status: "failed" });
     }
 });
 
@@ -616,30 +633,37 @@ bot.on("callback_query", async (ctx) => {
 bot.on(message("chat_shared"), async (ctx) => {
     const chat_id = ctx.update.message.chat_shared.chat_id.toString();
     const user_id = ctx.from.id.toString();
-
-    const { status } = await ctx.telegram.getChatMember(chat_id, user_id);
-
     const user = await getUser(user_id, ctx);
 
     if (!user) return;
 
     await ctx.deleteMessage(user.msgId);
+    const { message_id } = await ctx.reply("Processing...");
+
+    const { status } = await ctx.telegram.getChatMember(chat_id, user_id);
 
     if (status != "creator") {
-        await ctx.reply(text[user.languageCode].ONLY_ADMIN, {
-            reply_markup: {
-                inline_keyboard: [[{ text: "🔙 Back", callback_data: "back" }]],
-            },
-        });
+        await ctx.telegram.editMessageText(
+            user_id,
+            message_id,
+            undefined,
+            text[user.languageCode].ONLY_ADMIN,
+            {
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: "🔙 Back", callback_data: "back" }],
+                    ],
+                },
+            }
+        );
 
         return;
     }
 
+    await clearProcess(bot, chat_id);
+
     // Generate invite link and use it to add user account to channel
     const invite_link = await ctx.telegram.exportChatInviteLink(chat_id);
-
-    const msg = await ctx.reply("Processing...");
-
     const res = await fetch(`${API_URL}/join`, {
         method: "POST",
         headers: {
@@ -650,11 +674,15 @@ bot.on(message("chat_shared"), async (ctx) => {
             channel_link: invite_link,
         }),
     });
-
     const state = await res.json();
 
+    await ctx.telegram.leaveChat(chat_id);
+
     if (!state.status) {
-        await ctx.reply(
+        await ctx.telegram.editMessageText(
+            user_id,
+            message_id,
+            undefined,
             "❌ Something went wrong. Please try later or contact support.",
             {
                 reply_markup: {
@@ -664,24 +692,15 @@ bot.on(message("chat_shared"), async (ctx) => {
                 },
             }
         );
-        await ctx.telegram.leaveChat(chat_id);
 
         return;
     }
-
-    await ctx.telegram.leaveChat(chat_id);
-    await ctx.telegram.editMessageText(
-        ctx.from.id,
-        msg.message_id,
-        undefined,
-        text[user.languageCode].TRANSFERT
-    );
 
     await prisma.process.create({
         data: {
             channel_id: chat_id,
             user_id: user_id,
-            message_id: msg.message_id,
+            message_id: message_id,
         },
     });
 
@@ -690,14 +709,27 @@ bot.on(message("chat_shared"), async (ctx) => {
             telegramId: user_id,
         },
         data: {
-            msgId: msg.message_id,
+            msgId: message_id,
         },
     });
+
+    await ctx.telegram.editMessageText(
+        user_id,
+        message_id,
+        undefined,
+        text[user.languageCode].TRANSFERT
+    );
+
+    console.log("MESSAGE_ID: ", message_id);
 });
 
-// bot.launch(() => {
-//     console.log("BOT STARTED");
-// });
+bot.catch((err) => {
+    console.log(err);
+});
+
+bot.launch(() => {
+    console.log("BOT STARTED");
+});
 
 app.listen(PORT, () => {
     console.log(`Listening to port: ${PORT}`);
