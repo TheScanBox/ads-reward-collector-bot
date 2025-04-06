@@ -78,7 +78,7 @@ app.post("/withdrawal", checkAuth, async (req, res) => {
         if (inviterId) {
             await prisma.user.update({
                 where: {
-                    telegramId: inviterId,
+                    telegramId: inviterId.toString(),
                 },
                 data: {
                     balance: {
@@ -90,7 +90,7 @@ app.post("/withdrawal", checkAuth, async (req, res) => {
 
         await prisma.user.update({
             where: {
-                telegramId: user_id,
+                telegramId: user_id.toString(),
             },
             data: {
                 balance: {
@@ -101,7 +101,7 @@ app.post("/withdrawal", checkAuth, async (req, res) => {
 
         await prisma.user.update({
             where: {
-                telegramId: ADMIN_ID,
+                telegramId: ADMIN_ID?.toString(),
             },
             data: {
                 balance: {
@@ -115,7 +115,7 @@ app.post("/withdrawal", checkAuth, async (req, res) => {
                 {
                     id: generateID(8),
                     amount,
-                    userId: user_id,
+                    userId: user_id.toString(),
                     status: "completed",
                     type: "deposit",
                 },
@@ -719,8 +719,6 @@ bot.on(message("chat_shared"), async (ctx) => {
         undefined,
         text[user.languageCode].TRANSFERT
     );
-
-    console.log("MESSAGE_ID: ", message_id);
 });
 
 bot.catch((err) => {
