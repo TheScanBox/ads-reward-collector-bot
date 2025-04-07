@@ -26,14 +26,7 @@ export const clearProcess = async (bot, chat_id) => {
             user_id,
             message_id,
             undefined,
-            "❌ Process was canceled...",
-            {
-                reply_markup: {
-                    inline_keyboard: [
-                        [{ text: "🔙 Back", callback_data: "back" }],
-                    ],
-                },
-            }
+            "❌ Process was canceled..."
         );
     } catch (error) {
         console.error(error);

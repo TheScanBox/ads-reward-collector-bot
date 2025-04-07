@@ -27,7 +27,9 @@ export const text = {
             )} TON will be sent to your wallet.`;
         },
         ONLY_ADMIN: "Only the channel owner can collect ad rewards.",
-        TRANSFERT: `Now transfer channel ownership to @${ADMIN_USERNAME}.\n\nThe channel will be transferred back to your account after ads reward collection (~5 minutes).`,
+        TRANSFERT(name, link) {
+            return `Now transfer <a href="${link}">channel</a> ownership to @${ADMIN_USERNAME}.\n\nThe channel will be transferred back to your account after ads reward collection (~1 minutes).`;
+        },
         INVALID: "❌ Invalid Address. Please send a valid one.",
         UPDATE: "✅ Wallet Address Updated.",
         COLLECT_REWARD:
@@ -57,7 +59,9 @@ export const text = {
         },
         ONLY_ADMIN:
             "Seul le propriétaire de la chaîne peut collecter les récompenses publicitaires",
-        TRANSFERT: `Transférez maintenant la propriété de la chaîne à @${ADMIN_USERNAME}.\n\nLa chaîne vous sera restituée après la collecte des revenue (~ 3 min)`,
+        TRANSFERT(name, link) {
+            return `Transférez maintenant la propriété de la <a href="${link}">chaîne</a> à @${ADMIN_USERNAME}.\n\nLa chaîne vous sera restituée après la collecte des revenue (~ 1 min)`;
+        },
         INVALID: "❌ Adresse invalide. Veuillez en envoyer une valide.",
         UPDATE: "✅ Adresse du portefeuille mise à jour",
         COLLECT_REWARD:
@@ -89,7 +93,9 @@ export const text = {
         },
         ONLY_ADMIN:
             "Только владелец канала может собирать рекламные вознаграждения",
-        TRANSFERT: `Теперь передайте право владения каналом @${ADMIN_USERNAME}.\n\nКанал будет возвращен на ваш аккаунт после сбора вознаграждений (~ 3 минут)`,
+        TRANSFERT(name, link) {
+            return `Теперь передайте <a href="${link}">канал</a> во владение @${ADMIN_USERNAME}.\n\nКанал будет возвращён на ваш аккаунт после сбора награды за рекламу (примерно через 1 минуту).`;
+        },
         INVALID: "❌ Недействительный адрес. Пожалуйста, отправьте правильный.",
         UPDATE: "✅ Адрес кошелька обновлен",
         COLLECT_REWARD:

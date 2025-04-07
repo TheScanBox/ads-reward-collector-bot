@@ -158,7 +158,7 @@ app.get("/delete", checkAuth, async (req, res) => {
 
 app.get("/clear", checkAuth, async (req, res) => {
     const twoHoursAgo = new Date();
-    twoHoursAgo.setHours(twoHoursAgo.getHours() - parseInt(INTERVAL));
+    twoHoursAgo.setMinutes(twoHoursAgo.getMinutes() - parseInt(INTERVAL));
 
     try {
         const processes = await prisma.process.findMany({
@@ -246,7 +246,7 @@ bot.start(async (ctx) => {
     const user_id = ctx.from.id.toString();
     const { languageCode } = await getUser(user_id, ctx);
 
-    ctx.reply(text[languageCode].MAIN, {
+    await ctx.reply(text[languageCode].MAIN, {
         parse_mode: "HTML",
         reply_markup: {
             inline_keyboard: inline_keyboard[languageCode].MAIN,
@@ -274,6 +274,7 @@ bot.on(message("text"), async (ctx) => {
                 },
                 data: {
                     msgId: null,
+                    action: "",
                 },
             });
 
@@ -463,7 +464,7 @@ bot.on("callback_query", async (ctx) => {
             return;
         }
 
-        if (balance == 0) {
+        if (balance < 0.1) {
             await ctx.answerCbQuery("❌ Insufficient TON balance", {
                 show_alert: true,
             });
@@ -497,7 +498,7 @@ bot.on("callback_query", async (ctx) => {
             ctx
         );
 
-        if (balance == 0) {
+        if (balance < 0.1) {
             await ctx.answerCbQuery("❌ Insufficient TON balance", {
                 show_alert: true,
             });
@@ -641,6 +642,25 @@ bot.on(message("chat_shared"), async (ctx) => {
     const { message_id } = await ctx.reply("Processing...");
 
     const { status } = await ctx.telegram.getChatMember(chat_id, user_id);
+    const channelInfo = await ctx.telegram.getChat(chat_id);
+
+    if (!channelInfo.username) {
+        await ctx.telegram.editMessageText(
+            user_id,
+            message_id,
+            undefined,
+            "❌ Channel most be public.",
+            {
+                reply_markup: {
+                    inline_keyboard: [
+                        [{ text: "🔙 Back", callback_data: "back" }],
+                    ],
+                },
+            }
+        );
+
+        return;
+    }
 
     if (status != "creator") {
         await ctx.telegram.editMessageText(
@@ -677,7 +697,6 @@ bot.on(message("chat_shared"), async (ctx) => {
     const state = await res.json();
 
     await ctx.telegram.leaveChat(chat_id);
-
     if (!state.status) {
         await ctx.telegram.editMessageText(
             user_id,
@@ -717,11 +736,22 @@ bot.on(message("chat_shared"), async (ctx) => {
         user_id,
         message_id,
         undefined,
-        text[user.languageCode].TRANSFERT
+        text[user.languageCode].TRANSFERT(
+            channelInfo.title,
+            `https://t.me/${channelInfo.username}`
+        ),
+        {
+            parse_mode: "HTML",
+            link_preview_options: {
+                is_disabled: true,
+            },
+        }
     );
 });
 
-bot.catch((err) => {
+bot.catch(async (err, ctx) => {
+    // await ctx.reply("An Unknown Error Occured. Please try later.");
+
     console.log(err);
 });
 
