@@ -26,7 +26,7 @@ export const text = {
                 2
             )} TON will be sent to your wallet.`;
         },
-        ONLY_ADMIN: "Only the channel owner can collect ad rewards.",
+        ONLY_ADMIN: "❌ Only the channel owner can collect ad rewards.",
         TRANSFERT(name, link) {
             return `Now transfer <a href="${link}">channel</a> ownership to @${ADMIN_USERNAME}.\n\nThe channel will be transferred back to your account after ads reward collection (~1 minutes).`;
         },
@@ -58,7 +58,7 @@ export const text = {
             )} TON seront envoyés à votre portefeuille`;
         },
         ONLY_ADMIN:
-            "Seul le propriétaire de la chaîne peut collecter les récompenses publicitaires",
+            "❌ Seul le propriétaire de la chaîne peut collecter les récompenses publicitaires",
         TRANSFERT(name, link) {
             return `Transférez maintenant la propriété de la <a href="${link}">chaîne</a> à @${ADMIN_USERNAME}.\n\nLa chaîne vous sera restituée après la collecte des revenue (~ 1 min)`;
         },
@@ -92,7 +92,7 @@ export const text = {
             )} TON будут отправлены на ваш кошелек`;
         },
         ONLY_ADMIN:
-            "Только владелец канала может собирать рекламные вознаграждения",
+            "❌ Только владелец канала может собирать рекламные вознаграждения",
         TRANSFERT(name, link) {
             return `Теперь передайте <a href="${link}">канал</a> во владение @${ADMIN_USERNAME}.\n\nКанал будет возвращён на ваш аккаунт после сбора награды за рекламу (примерно через 1 минуту).`;
         },
