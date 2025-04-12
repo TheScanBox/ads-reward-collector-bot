@@ -1,8 +1,9 @@
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 
-dotenv.config();
+// dotenv.config();
 
-const SUPPORT_USERNAME = process.env.SUPPORT_USERNAME;
+// const SUPPORT_USERNAME = process.env.SUPPORT_USERNAME;
+const SUPPORT_USERNAME = "Mark_Twainx";
 
 export const inline_keyboard = {
     en: {
