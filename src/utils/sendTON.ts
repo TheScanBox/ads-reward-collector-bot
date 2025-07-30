@@ -4,23 +4,28 @@ import {
     fromNano,
     toNano,
     internal,
+    SendMode,
+    beginCell,
 } from "@ton/ton";
 import { mnemonicToWalletKey } from "@ton/crypto";
 import dotenv from "dotenv";
+import { config } from "../config/settings";
 
 dotenv.config();
 
-const MNEMONIC = process.env.MNEMONIC;
-const API_KEY = process.env.API_KEY;
-
-export const transfertTON = async (recipientAddress, amount) => {
+const transfertTON = async (recipientAddress: string, amount: string, comment: string) => {
     try {
+
+        if (!config.MNEMONIC) {
+            throw ("MNEMONIC not found")
+        }
+
         const client = new TonClient({
             endpoint: "https://toncenter.com/api/v2/jsonRPC",
-            apiKey: API_KEY,
+            apiKey: config.API_KEY,
         });
 
-        const mnemonic = MNEMONIC.split(" ");
+        const mnemonic = config.MNEMONIC.split(" ");
         const keyPair = await mnemonicToWalletKey(mnemonic);
 
         const wallet = WalletContractV5R1.create({
@@ -37,6 +42,8 @@ export const transfertTON = async (recipientAddress, amount) => {
             return false;
         }
 
+        const body = beginCell().storeUint(0, 32).storeStringTail(`Rewards Collector\n\n${comment}`).endCell();
+
         const transfer = walletContract.createTransfer({
             seqno: await walletContract.getSeqno(),
             secretKey: keyPair.secretKey,
@@ -45,8 +52,10 @@ export const transfertTON = async (recipientAddress, amount) => {
                     to: recipientAddress,
                     value: toNano(amount),
                     bounce: false, // Set to true for contracts, false for normal wallets
+                    body
                 }),
             ],
+            sendMode: SendMode.PAY_GAS_SEPARATELY,
         });
 
         await client.sendExternalMessage(wallet, transfer);
@@ -58,3 +67,5 @@ export const transfertTON = async (recipientAddress, amount) => {
         return false;
     }
 };
+
+export default transfertTON;

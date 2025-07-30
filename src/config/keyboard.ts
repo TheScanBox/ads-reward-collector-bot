@@ -1,9 +1,8 @@
-// import dotenv from "dotenv";
+import dotenv from "dotenv";
 
-// dotenv.config();
+dotenv.config();
 
-// const SUPPORT_USERNAME = process.env.SUPPORT_USERNAME;
-const SUPPORT_USERNAME = "Mark_Twainx";
+import { config } from "./settings";
 
 export const inline_keyboard = {
     en: {
@@ -23,7 +22,7 @@ export const inline_keyboard = {
             ],
             [
                 { text: "🌐 About", callback_data: "about" },
-                { text: "👨‍💻 Support", url: `https://t.me/${SUPPORT_USERNAME}` },
+                { text: "👨‍💻 Support", url: `https://t.me/${config.SUPPORT_USERNAME}` },
             ],
         ],
         PROFILE: [
@@ -37,7 +36,7 @@ export const inline_keyboard = {
                     callback_data: "change_language",
                 },
             ],
-            [{ text: "🔙 Back", callback_data: "back_profile" }],
+            [{ text: "🔙 Back", callback_data: "back_home" }],
         ],
         CONFIRM: [
             [
@@ -52,6 +51,19 @@ export const inline_keyboard = {
             ],
             [{ text: "🔙 Back", callback_data: "profile" }],
         ],
+        SELECT_OPTION: [
+            [
+                {
+                    text: "💎 TON",
+                    callback_data: "collect_ton_reward",
+                },
+                {
+                    text: "⭐ Stars",
+                    callback_data: "collect_stars_reward",
+                },
+            ],
+            [{ text: "🔙 Back", callback_data: "back_home" }],
+        ]
     },
     fr: {
         MAIN: [
@@ -70,7 +82,7 @@ export const inline_keyboard = {
             ],
             [
                 { text: "🌐 À propos", callback_data: "about" },
-                { text: "👨‍💻 Support", url: `https://t.me/${SUPPORT_USERNAME}` },
+                { text: "👨‍💻 Support", url: `https://t.me/${config.SUPPORT_USERNAME}` },
             ],
         ],
         PROFILE: [
@@ -87,7 +99,7 @@ export const inline_keyboard = {
                     callback_data: "change_language",
                 },
             ],
-            [{ text: "🔙 Retour", callback_data: "back_profile" }],
+            [{ text: "🔙 Retour", callback_data: "back_home" }],
         ],
         CONFIRM: [
             [
@@ -102,6 +114,19 @@ export const inline_keyboard = {
             ],
             [{ text: "🔙 Retour", callback_data: "profile" }],
         ],
+        SELECT_OPTION: [
+            [
+                {
+                    text: "💎 TON",
+                    callback_data: "collect_ton_reward",
+                },
+                {
+                    text: "⭐ Stars",
+                    callback_data: "collect_stars_reward",
+                },
+            ],
+            [{ text: "🔙 Retour", callback_data: "back_home" }],
+        ]
     },
     ru: {
         MAIN: [
@@ -122,7 +147,7 @@ export const inline_keyboard = {
                 { text: "🌐 О нас", callback_data: "about" },
                 {
                     text: "👨‍💻 Поддержка",
-                    url: `https://t.me/${SUPPORT_USERNAME}`,
+                    url: `https://t.me/${config.SUPPORT_USERNAME}`,
                 },
             ],
         ],
@@ -137,7 +162,7 @@ export const inline_keyboard = {
                     callback_data: "change_language",
                 },
             ],
-            [{ text: "🔙 Назад", callback_data: "back_profile" }],
+            [{ text: "🔙 Назад", callback_data: "back_home" }],
         ],
         CONFIRM: [
             [
@@ -152,5 +177,18 @@ export const inline_keyboard = {
             ],
             [{ text: "🔙 Назад", callback_data: "profile" }],
         ],
+        SELECT_OPTION: [
+            [
+                {
+                    text: "💎 TON",
+                    callback_data: "collect_ton_reward",
+                },
+                {
+                    text: "⭐ Stars",
+                    callback_data: "collect_stars_reward",
+                },
+            ],
+            [{ text: "🔙 Назад", callback_data: "back_home" }],
+        ]
     },
 };

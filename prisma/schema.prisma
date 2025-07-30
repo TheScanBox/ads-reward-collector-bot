@@ -10,6 +10,7 @@ generator client {
 
 datasource db {
     provider  = "postgresql"
+    // provider = "sqlite"
     url       = env("DATABASE_URL")
     directUrl = env("DIRECT_URL")
 }
@@ -33,6 +34,8 @@ model User {
     withdrawalStatus String  @default("idle")
 
     transactions Transaction[]
+
+    process Process? @relation
 }
 
 model Transaction {
@@ -50,8 +53,16 @@ model Transaction {
 model Process {
     id String @id @default(uuid())
 
-    channel_id String   @unique
-    user_id    String
+    channel_id String?
     message_id Int?
-    createdAt  DateTime @default(now())
+    type       ProcessType @default(TON)
+    createdAt  DateTime    @default(now())
+
+    user    User   @relation(fields: [user_id], references: [telegramId], onDelete: Cascade)
+    user_id String @unique
+}
+
+enum ProcessType {
+    STARS
+    TON
 }

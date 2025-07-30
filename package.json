@@ -1,20 +1,21 @@
 {
     "name": "fragment-ads-collector-bot",
-    "type": "module",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev": "node src/index.js",
+        "dev": "ts-node src/index.ts",
+        "build": "npx prisma generate && npx tsc",
         "start": "npx prisma generate && node src/index.js"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "@prisma/client": "^6.5.0",
+        "@prisma/client": "^6.13.0",
         "@ton/crypto": "^3.3.0",
         "@ton/ton": "^15.2.1",
+        "axios": "^1.11.0",
         "dotenv": "^16.4.7",
         "express": "^4.21.2",
         "telegraf": "^4.16.3",
@@ -23,6 +24,9 @@
         "ton-crypto": "^3.2.0"
     },
     "devDependencies": {
-        "prisma": "^6.5.0"
+        "@types/express": "^5.0.3",
+        "@types/node": "^24.1.0",
+        "prisma": "^6.13.0",
+        "ts-node": "^10.9.2"
     }
 }
