@@ -9,7 +9,7 @@ export const inline_keyboard = {
         MAIN: [
             [
                 {
-                    text: "⭐ Collect Ads Rewards",
+                    text: "⭐ Collect Rewards",
                     callback_data: "collect_reward",
                 },
             ],

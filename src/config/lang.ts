@@ -28,7 +28,7 @@ export const lang: Record<LanguageCode, Texts> = {
         REFERAL(username: string, user_id: string | number): string {
             return `<b>👥 Earn TON by inviting people to the bot!</b>\n\nFor each collection of the balance using your link, you are guaranteed to receive 2% of the amount to your account!\n\n👉 https://t.me/${username}?start=${user_id}`;
         },
-        ABOUT: `I will help you collect Telegram rewards from your channel. 💸\n\n<b>Here's what you need:</b>\n1. You must be the <b>owner of the channel</b>.\n2. The available  rewards for collection must be more than <b>${config.MIN_WITHDRAWAL_TON_AMOUNT} TON 💎</b> or <b>${config.MIN_WITHDRAWAL_STAR_AMOUNT} stars ⭐</b>.\n\n<i>Note: A small commission of 8% will be applied on each collection.</i>`,
+        ABOUT: `I will help you collect Telegram rewards from your channel. 💸\n\n<b>Here's what you need:</b>\n1. You must be the <b>owner of the channel</b>.\n2. The available  rewards for collection must be more than <b>${config.MIN_WITHDRAWAL_TON_AMOUNT} TON 💎</b> or <b>${config.MIN_WITHDRAWAL_STAR_AMOUNT} stars ⭐</b>.\n\n<i>Note: A commission of 8% will be applied on each collection.</i>`,
         PROFILE(walletAddress: string, balance: number) {
             return `👤 Your profile:\n\n⚡ Wallet Address: ${walletAddress ? `<code>${walletAddress}</code>` : "Not set"
                 }\n\n💵 Account Balance: ${balance.toFixed(2)} TON`;

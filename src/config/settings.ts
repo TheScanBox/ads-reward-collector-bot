@@ -18,4 +18,5 @@ export const config = {
     MIN_WITHDRAWAL_STAR_AMOUNT: parseFloat(process.env.MIN_WITHDRAWAL_STAR_AMOUNT || "1000"),
     MNEMONIC: process.env.MNEMONIC || "",
     API_KEY: process.env.API_KEY || "",
+    PAYMENT_CHANNEL_ID: process.env.PAYMENT_CHANNEL_ID || "",
 }
