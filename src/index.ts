@@ -34,6 +34,8 @@ protectedRoute.use("/clear", clearRoute);
 protectedRoute.use("/delete", deleteRoute);
 protectedRoute.use("/process", processRoute);
 
+app.use("/api", protectedRoute);
+
 bot.start(startCommand);
 bot.on(message("text"), textCommand);
 bot.on("callback_query", callbackqueryCommand);
